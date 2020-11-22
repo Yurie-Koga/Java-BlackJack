@@ -1,28 +1,19 @@
 package sample.control;
-import com.sun.xml.internal.xsom.XSUnionSimpleType;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-// <<<<<<< kazu_confirmation_dialog
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import sample.model.Card;       ////
-// =======
-// import sample.model.Card;
-// >>>>>>> main
+import sample.model.Card;
 import sample.model.Deck;
 import sample.model.Player;
 import sample.view.HelpWindow;
-
 import java.net.URL;
-// <<<<<<< kazu_confirmation_dialog
-import java.util.ArrayList;   ///
+import java.util.ArrayList;
 import java.util.Optional;
-// =======
-// import java.util.ArrayList;
-// >>>>>>> main
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -46,19 +37,16 @@ public class Controller implements Initializable {
 
     private Deck deck;
     private ArrayList<Player> players = new ArrayList<>();
-    private boolean isGameRunning;
-    private Player turn;
     private int playerInt;
     private Player player;
-
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Deck deck = new Deck();
-        players.add(0, new Player("Player1", new ArrayList<Integer>(), 0, true));
-        players.add(1, new Player("Player2", new ArrayList<Integer>(),0, false));
-        players.add(2, new Player("Dealer", new ArrayList<Integer>(), 0, false));
+        players.add(0, new Player("Player1", new ArrayList<Card>(), 0));
+        players.add(1, new Player("Player2", new ArrayList<Card>(),0));
+        players.add(2, new Player("Dealer", new ArrayList<Card>(), 0));
     }
 
 
@@ -68,7 +56,6 @@ public class Controller implements Initializable {
             System.out.println(players.get(i));
         }
         System.out.println("Game Start!");
-        isGameRunning = true;
         // Hide Start Button after game starting
         btnStart.setVisible(false);
         playerInt = 0;
@@ -97,8 +84,8 @@ public class Controller implements Initializable {
             btnHit2.setDisable(true);
             btnStand2.setDisable(true);
             //------------- Dealer method HERE----------------------
-            int value = pickCard(player, deck);
-            player.setHand(addToHand(player,value));
+            Card pickedCard = pickCard(player, deck);
+            player.setHand(addToHand(player,pickedCard));
             player.setSum(totalSum(player));
             System.out.println(players.get(2));
             playerInt = 0;
@@ -107,26 +94,29 @@ public class Controller implements Initializable {
         }
     }
 
-    public int pickCard(Player player, Deck deck){
+    /// Update to return Card
+    public Card pickCard(Player player, Deck deck){
         Random rand = new Random();
         int int_random = rand.nextInt(Deck.getDeckOfCards().size());
         System.out.println("Randomly chosen card for " + player.getName() + " is" + Deck.getDeckOfCards().get(int_random));
-        int value = Deck.getDeckOfCards().get(int_random).getRank();
+        Card pickedCard = Deck.getDeckOfCards().get(int_random);
         Deck.getDeckOfCards().remove(int_random);
         Deck.setDeckOfCards(Deck.getDeckOfCards());
-        return value;
+        return pickedCard;
     }
 
-    public ArrayList<Integer> addToHand(Player player, int value){
-        ArrayList<Integer> newHand = player.getHand();
-        newHand.add(value);
+    // Update to add Card obj into arrayList
+    public ArrayList<Card> addToHand(Player player, Card card){
+        ArrayList<Card> newHand = player.getHand();
+        newHand.add(card);
         return newHand;
     }
 
+    // return sum as int
     public int totalSum(Player player){
         int newSum = 0;
         for (int i = 0; i < player.getHand().size();i++){
-            newSum = newSum + player.getHand().get(i);
+            newSum = newSum + player.getHand().get(i).getRank();
         }
         return newSum;
     }
