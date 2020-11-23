@@ -9,6 +9,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import sample.model.Card;
 import sample.model.Deck;
+import sample.model.Judge;
 import sample.model.Player;
 import sample.view.HelpWindow;
 import java.net.URL;
@@ -44,12 +45,31 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Deck deck = new Deck();
-        players.add(0, new Player("Player1", new ArrayList<Card>(), 0));
-        players.add(1, new Player("Player2", new ArrayList<Card>(),0));
-        players.add(2, new Player("Dealer", new ArrayList<Card>(), 0));
+        players.add(new Player("Player1", new ArrayList<Card>(), 0));
+        players.add(new Player("Player2", new ArrayList<Card>(),0));
+        players.add(new Player("Dealer", new ArrayList<Card>(), 0));
     }
 
 
+    /**
+     * Distribute 2 cards to players and a dealer hands
+     * @param player
+     * @return
+     */
+    public ArrayList<Card> InitialHand(Player player){
+        Card pickedCard1 = pickCard(player,deck);
+        player.setHand(addToHand(player,pickedCard1));
+        Card pickedCard2 = pickCard(player,deck);
+        player.setHand(addToHand(player,pickedCard2));
+        player.setSum(totalSum(player));
+        return player.getHand();
+    }
+
+
+    /**
+     * Game start, set initial hands and check BlackJack
+     * @param actionEvent
+     */
     public void gameStart(ActionEvent actionEvent) {
         System.out.println("deckOfCards start with " + Deck.getDeckOfCards().size() + " !");
         for (int i = 0; i < 3; i++){
@@ -58,22 +78,74 @@ public class Controller implements Initializable {
         System.out.println("Game Start!");
         // Hide Start Button after game starting
         btnStart.setVisible(false);
-        playerInt = 0;
-        enableDisableButton(getTurn(playerInt));
+
+        for (int i = 0; i < 3 ; i++) {
+            InitialHand(players.get(i));
+        }
+        /// Player1 & Player2 get Black Jack
+        if(Judge.isBlackJack(players, "Player1") && Judge.isBlackJack(players, "Player2")){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Player1 and Player2 BlackJack");
+            alert.setHeaderText("Player1 and Player2 BlackJack!\nClick 'Start' to play again. ");
+            alert.showAndWait();
+            btnStart.setVisible(true);
+        }
+        // Player1 BlackJack
+        else  if (Judge.isBlackJack(players, "Player1")){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Player1 BlackJack");
+            alert.setHeaderText("Player1 BlackJack!\nNow it's Dealer v.s. Player2.");
+            alert.showAndWait();
+            players.remove(0);
+            System.out.println(players);
+            playerInt = 0;
+            enableDisableButton(getTurn(playerInt));
+        }
+        // Player2 BlackJack
+        else if (Judge.isBlackJack(players, "Player2")){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Player2 BlackJack");
+            alert.setHeaderText("Player2 BlackJack!\nNow it's Dealer v.s. Player1.");
+            alert.showAndWait();
+            players.remove(1);
+            System.out.println(players);
+            playerInt = 0;
+            enableDisableButton(getTurn(playerInt));
+        }
+        // Dealer BlackJack
+        else if (Judge.isBlackJack(players, "Dealer")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Dealer BlackJack");
+            alert.setHeaderText("Dealer BlackJack!\nClick 'Start' to play again.");
+            alert.showAndWait();
+            btnStart.setVisible(true);
+        } else {
+            playerInt = 0;
+            enableDisableButton(getTurn(playerInt));
+            System.out.println(players);
+        }
     }
 
+    /**
+     * @param playerInt
+     * @return playingPlayer
+     */
     public Player getTurn(int playerInt){
         return players.get(playerInt);
     }
 
+    /**
+     * method to enable/disable players' buttons
+     * @param player
+     */
     public void enableDisableButton(Player player){
-        if(player == players.get(0)){
+        if(player.getName().equals("Player1")){
             btnHit1.setDisable(false);
             btnStand1.setDisable(false);
             btnHit2.setDisable(true);
             btnStand2.setDisable(true);
         }
-        else if (player == players.get(1)){
+        else if (player.getName().equals("Player2")){
             btnHit2.setDisable(false);
             btnStand2.setDisable(false);
             btnHit1.setDisable(true);
@@ -83,36 +155,51 @@ public class Controller implements Initializable {
             btnStand1.setDisable(true);
             btnHit2.setDisable(true);
             btnStand2.setDisable(true);
+            Judge.gameResult(players);
+
             //------------- Dealer method HERE----------------------
             Card pickedCard = pickCard(player, deck);
             player.setHand(addToHand(player,pickedCard));
             player.setSum(totalSum(player));
-            System.out.println(players.get(2));
             playerInt = 0;
             enableDisableButton(players.get(playerInt));
+            System.out.println(players);
             //------------------------------------------------------
         }
     }
 
-    /// Update to return Card
+    /**
+     * Randomly pick up a card from deck of cards, set a new deck of cards
+     * @param player
+     * @param deck
+     * @return pickedCard
+     */
     public Card pickCard(Player player, Deck deck){
         Random rand = new Random();
         int int_random = rand.nextInt(Deck.getDeckOfCards().size());
-        System.out.println("Randomly chosen card for " + player.getName() + " is" + Deck.getDeckOfCards().get(int_random));
         Card pickedCard = Deck.getDeckOfCards().get(int_random);
         Deck.getDeckOfCards().remove(int_random);
         Deck.setDeckOfCards(Deck.getDeckOfCards());
         return pickedCard;
     }
 
-    // Update to add Card obj into arrayList
+    /**
+     * Add a Card to player's hand
+     * @param player
+     * @param card
+     * @return player's hand
+     */
     public ArrayList<Card> addToHand(Player player, Card card){
         ArrayList<Card> newHand = player.getHand();
         newHand.add(card);
         return newHand;
     }
 
-    // return sum as int
+    /**
+     * calculate sum of players hands
+     * @param player
+     * @return player's sum
+     */
     public int totalSum(Player player){
         int newSum = 0;
         for (int i = 0; i < player.getHand().size();i++){
@@ -121,30 +208,40 @@ public class Controller implements Initializable {
         return newSum;
     }
 
+    /**
+     * Add randomly picked card to player's hand, update sum
+     * @param actionEvent
+     */
     public void hitClicked(ActionEvent actionEvent) {
         player = getTurn(playerInt);
         player.setHand(addToHand(player, pickCard(player, deck)));
         player.setSum(totalSum(player));
         System.out.println(player);
 
-        Button hitClicked = (Button) actionEvent.getSource();
-        String hitButtonId = hitClicked.getId();
-        if (hitButtonId.equals("btnHit1")){
-            playerInt++;
-        } else if (hitButtonId.equals("btnHit2")){
-            playerInt++;
+        if (Judge.isBusted(player)){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(player.getName() + " Bust");
+            alert.setHeaderText(player.getName() + " Busted!");
+            alert.showAndWait();
+            players.remove(player);
+            enableDisableButton(getTurn(playerInt));
         }
-        enableDisableButton(getTurn(playerInt));
+
     }
 
+    /**
+     * Skip turn
+     * @param actionEvent
+     */
     public void standClicked(ActionEvent actionEvent) {
         Button hitClicked = (Button) actionEvent.getSource();
         String hitButtonId = hitClicked.getId();
+
         if(hitButtonId.equals("btnStand1")){
             playerInt++;
             System.out.println("btnStand1 clicked");
         } else if(hitButtonId.equals("btnStand2")){
-            playerInt = 0;
+            playerInt++;
             System.out.println("btnStand2 clicked");
         }
         enableDisableButton(getTurn(playerInt));
@@ -170,7 +267,5 @@ public class Controller implements Initializable {
         System.out.println("help clicked");
         HelpWindow.displayHelp(actionEvent, getClass());
     }
-
-    /// Display result (Judge -> use judge class to show the result (Win, bust, push)
 
 }
