@@ -1,272 +1,114 @@
-package sample.control;
-
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+package sample.model;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import sample.model.Card;
-import sample.model.Deck;
-import sample.model.Judge;
-import sample.model.Player;
-import sample.view.HelpWindow;
-import java.net.URL;
+
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
-import java.util.ResourceBundle;
+/**
+ * This is to judge the end of game: WIN/BUST/PUSH
+ */
+public class Judge extends Player {
 
-
-public class Controller implements Initializable {
-
-    @FXML
-    public Button btnStart;
-    @FXML
-    public Button btnStand1;
-    @FXML
-    public Button btnStand2;
-    @FXML
-    public Button btnHit1;
-    @FXML
-    public Button btnHit2;
-    @FXML
-    public Button btnHelp;
-    @FXML
-    public Button btnEsc;
-
-    private Deck deck;
-    private ArrayList<Player> players = new ArrayList<>();
-    private int playerInt;
-    private Player player;
-
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        Deck deck = new Deck();
-        players.add(new Player("Player1", new ArrayList<Card>(), 0));
-        players.add(new Player("Player2", new ArrayList<Card>(),0));
-        players.add(new Player("Dealer", new ArrayList<Card>(), 0));
+    public Judge(String name, ArrayList<Card> hand,  int sum){
+        super(name, hand, sum);
     }
 
 
     /**
-     * Distribute 2 cards to players and a dealer hands
+     * Check if the first 2 cards are BlackJack
+     * @param players
+     * @param name
+     * @return boolean
+     */
+    public static boolean isBlackJack(ArrayList<Player> players, String name){
+        for (int i = 0; i < players.size(); i++){
+            if (players.get(i).getName().equals(name)){
+                if(players.get(i).getSum() == 21){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Check if sum of player's hand exceed 21, and if so disable the buttons
      * @param player
-     * @return
+     * @return boolean
      */
-    public ArrayList<Card> InitialHand(Player player){
-        Card pickedCard1 = pickCard(player,deck);
-        player.setHand(addToHand(player,pickedCard1));
-        Card pickedCard2 = pickCard(player,deck);
-        player.setHand(addToHand(player,pickedCard2));
-        player.setSum(totalSum(player));
-        return player.getHand();
+    public static boolean isBusted(Player player){
+        if (player.getSum() > 21){
+            return true;
+        }
+        return false;
     }
 
-
     /**
-     * Game start, set initial hands and check BlackJack
-     * @param actionEvent
+     * Check the game result
+     * @param players
      */
-    public void gameStart(ActionEvent actionEvent) {
-        System.out.println("deckOfCards start with " + Deck.getDeckOfCards().size() + " !");
-        for (int i = 0; i < 3; i++){
-            System.out.println(players.get(i));
-        }
-        System.out.println("Game Start!");
-        // Hide Start Button after game starting
-        btnStart.setVisible(false);
+    public static void gameResult(ArrayList<Player> players){
+        System.out.println("game Result method ");
+        int player1Sum = 0;
+        int player2Sum = 0;
+        int dealerSum = 0;
 
-        for (int i = 0; i < 3 ; i++) {
-            InitialHand(players.get(i));
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getName().equals("Player1")) {
+                player1Sum = players.get(i).getSum();
+            } else if (players.get(i).getName().equals("Player2")) {
+                player2Sum = players.get(i).getSum();
+            } else if (players.get(i).getName().equals("Dealer")) {
+                dealerSum = players.get(i).getSum();
+            }
         }
-        /// Player1 & Player2 get Black Jack
-        if(Judge.isBlackJack(players, "Player1") && Judge.isBlackJack(players, "Player2")){
+
+        if (dealerSum > 21){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Player1 and Player2 BlackJack");
-            alert.setHeaderText("Player1 and Player2 BlackJack!\nClick 'Start' to play again. ");
+            alert.setTitle("Dealer Bust");
+            alert.setHeaderText("Dealer Busted! Player win!");
             alert.showAndWait();
-            btnStart.setVisible(true);
-        }
-        // Player1 BlackJack
-        else  if (Judge.isBlackJack(players, "Player1")){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Player1 BlackJack");
-            alert.setHeaderText("Player1 BlackJack!\nNow it's Dealer v.s. Player2.");
-            alert.showAndWait();
-            players.remove(0);
-            System.out.println(players);
-            playerInt = 0;
-            enableDisableButton(getTurn(playerInt));
-        }
-        // Player2 BlackJack
-        else if (Judge.isBlackJack(players, "Player2")){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Player2 BlackJack");
-            alert.setHeaderText("Player2 BlackJack!\nNow it's Dealer v.s. Player1.");
-            alert.showAndWait();
-            players.remove(1);
-            System.out.println(players);
-            playerInt = 0;
-            enableDisableButton(getTurn(playerInt));
-        }
-        // Dealer BlackJack
-        else if (Judge.isBlackJack(players, "Dealer")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Dealer BlackJack");
-            alert.setHeaderText("Dealer BlackJack!\nClick 'Start' to play again.");
-            alert.showAndWait();
-            btnStart.setVisible(true);
-        } else {
-            playerInt = 0;
-            enableDisableButton(getTurn(playerInt));
-            System.out.println(players);
-        }
-    }
-
-    /**
-     * @param playerInt
-     * @return playingPlayer
-     */
-    public Player getTurn(int playerInt){
-        return players.get(playerInt);
-    }
-
-    /**
-     * method to enable/disable players' buttons
-     * @param player
-     */
-    public void enableDisableButton(Player player){
-        if(player.getName().equals("Player1")){
-            btnHit1.setDisable(false);
-            btnStand1.setDisable(false);
-            btnHit2.setDisable(true);
-            btnStand2.setDisable(true);
-        }
-        else if (player.getName().equals("Player2")){
-            btnHit2.setDisable(false);
-            btnStand2.setDisable(false);
-            btnHit1.setDisable(true);
-            btnStand1.setDisable(true);
-        } else {
-            btnHit1.setDisable(true);
-            btnStand1.setDisable(true);
-            btnHit2.setDisable(true);
-            btnStand2.setDisable(true);
-            Judge.gameResult(players);
-
-            //------------- Dealer method HERE----------------------
-            Card pickedCard = pickCard(player, deck);
-            player.setHand(addToHand(player,pickedCard));
-            player.setSum(totalSum(player));
-            playerInt = 0;
-            enableDisableButton(players.get(playerInt));
-            System.out.println(players);
-            //------------------------------------------------------
-        }
-    }
-
-    /**
-     * Randomly pick up a card from deck of cards, set a new deck of cards
-     * @param player
-     * @param deck
-     * @return pickedCard
-     */
-    public Card pickCard(Player player, Deck deck){
-        Random rand = new Random();
-        int int_random = rand.nextInt(Deck.getDeckOfCards().size());
-        Card pickedCard = Deck.getDeckOfCards().get(int_random);
-        Deck.getDeckOfCards().remove(int_random);
-        Deck.setDeckOfCards(Deck.getDeckOfCards());
-        return pickedCard;
-    }
-
-    /**
-     * Add a Card to player's hand
-     * @param player
-     * @param card
-     * @return player's hand
-     */
-    public ArrayList<Card> addToHand(Player player, Card card){
-        ArrayList<Card> newHand = player.getHand();
-        newHand.add(card);
-        return newHand;
-    }
-
-    /**
-     * calculate sum of players hands
-     * @param player
-     * @return player's sum
-     */
-    public int totalSum(Player player){
-        int newSum = 0;
-        for (int i = 0; i < player.getHand().size();i++){
-            newSum = newSum + player.getHand().get(i).getRank();
-        }
-        return newSum;
-    }
-
-    /**
-     * Add randomly picked card to player's hand, update sum
-     * @param actionEvent
-     */
-    public void hitClicked(ActionEvent actionEvent) {
-        player = getTurn(playerInt);
-        player.setHand(addToHand(player, pickCard(player, deck)));
-        player.setSum(totalSum(player));
-        System.out.println(player);
-
-        if (Judge.isBusted(player)){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle(player.getName() + " Bust");
-            alert.setHeaderText(player.getName() + " Busted!");
-            alert.showAndWait();
-            players.remove(player);
-            enableDisableButton(getTurn(playerInt));
-        }
-
-    }
-
-    /**
-     * Skip turn
-     * @param actionEvent
-     */
-    public void standClicked(ActionEvent actionEvent) {
-        Button hitClicked = (Button) actionEvent.getSource();
-        String hitButtonId = hitClicked.getId();
-
-        if(hitButtonId.equals("btnStand1")){
-            playerInt++;
-            System.out.println("btnStand1 clicked");
-        } else if(hitButtonId.equals("btnStand2")){
-            playerInt++;
-            System.out.println("btnStand2 clicked");
-        }
-        enableDisableButton(getTurn(playerInt));
-    }
-
-
-    public void escClicked(ActionEvent actionEvent) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText(null);
-        alert.setContentText("Do you quit this game?");
-        ButtonType continueBtn = new ButtonType("Continue", ButtonBar.ButtonData.OK_DONE);
-        ButtonType quitBtn = new ButtonType("Quit", ButtonBar.ButtonData.CANCEL_CLOSE);
-        alert.getButtonTypes().setAll(continueBtn,quitBtn);
-        Optional<ButtonType> result = alert.showAndWait();
-        if(result.get() == quitBtn){
             System.exit(0);
         }
+        if (dealerSum <= 21 && player1Sum <= 21 && player1Sum != 0){
+            int dealerDiff = 21 - dealerSum;
+            int player1Diff = 21 - player1Sum;
+            if (dealerDiff == player1Diff){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("PUSH");
+                alert.setHeaderText("Dealer and Player1 Push!");
+                alert.showAndWait();
+            } else if (dealerDiff < player1Diff){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Dealer won");
+                alert.setHeaderText("Dealer won!");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Player1 won");
+                alert.setHeaderText("Player1 won!");
+                alert.showAndWait();
+            }
+        }
+        if (dealerSum <= 21 && player2Sum <= 21 && player2Sum != 0){
+            int dealerDiff = 21 - dealerSum;
+            int player2Diff = 21 - player2Sum;
+            if (dealerDiff == player2Diff){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("PUSH");
+                alert.setHeaderText("Dealer and Player2 Push!");
+                alert.showAndWait();
+            } else if (dealerDiff < player2Diff){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Dealer won");
+                alert.setHeaderText("Dealer won!");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Player2 won");
+                alert.setHeaderText("Player2 won!");
+                alert.showAndWait();
+            }
+        }
+        System.exit(0);
     }
-
-
-    public void helpClicked(ActionEvent actionEvent) {
-        System.out.println("help clicked");
-        HelpWindow.displayHelp(actionEvent, getClass());
-    }
-
 }
-
