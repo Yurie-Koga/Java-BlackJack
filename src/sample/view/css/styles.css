@@ -33,6 +33,7 @@ HBox {
 
 ImageView {
     -fx-background-color: -fx-gradi-end-color;
+    -fx-effect: dropshadow(three-pass-box, black, 10, 0.3, 0, 0);
 }
 
 /* Main Window */
