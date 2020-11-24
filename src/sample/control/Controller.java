@@ -3,10 +3,7 @@ package sample.control;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import sample.model.Card;
 import sample.model.Deck;
 import sample.model.Player;
@@ -34,6 +31,14 @@ public class Controller implements Initializable {
     public Button btnHelp;
     @FXML
     public Button btnEsc;
+    @FXML
+    public Label labelSum1;
+    @FXML
+    public Label labelSum2;
+    @FXML
+    public Label labelSumDealer;
+    @FXML
+    public Label labelDeck;
 
     private Deck deck;
     private ArrayList<Player> players = new ArrayList<>();
@@ -102,6 +107,8 @@ public class Controller implements Initializable {
         Card pickedCard = Deck.getDeckOfCards().get(int_random);
         Deck.getDeckOfCards().remove(int_random);
         Deck.setDeckOfCards(Deck.getDeckOfCards());
+        // by Kazunobu
+        labelDeck.setText(String.valueOf(Deck.getDeckOfCards().size()));
         return pickedCard;
     }
 
@@ -118,7 +125,20 @@ public class Controller implements Initializable {
         for (int i = 0; i < player.getHand().size();i++){
             newSum = newSum + player.getHand().get(i).getRank();
         }
+        // by Kazunobu
+        displaySum(player, newSum);
         return newSum;
+    }
+
+    // display sum of Player1, 2 and dealer's card value
+    public void displaySum(Player player, int sum){
+        if(player.getName().equals("Player1")){
+            labelSum1.setText("Player1 sum:" + sum);
+        }else if(player.getName().equals("Player2")){
+            labelSum2.setText("Player2 sum:" + sum);
+        }else{
+            labelSumDealer.setText("Dealer sum:" + sum);
+        }
     }
 
     public void hitClicked(ActionEvent actionEvent) {
