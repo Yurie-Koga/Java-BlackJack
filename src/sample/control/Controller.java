@@ -9,10 +9,7 @@ import sample.model.Deck;
 import sample.model.Player;
 import sample.view.HelpWindow;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class Controller implements Initializable {
@@ -44,6 +41,7 @@ public class Controller implements Initializable {
     private ArrayList<Player> players = new ArrayList<>();
     private int playerInt;
     private Player player;
+    private ArrayList<Button> playerBtns = new ArrayList<>();
 
 
     @Override
@@ -52,8 +50,30 @@ public class Controller implements Initializable {
         players.add(0, new Player("Player1", new ArrayList<Card>(), 0));
         players.add(1, new Player("Player2", new ArrayList<Card>(),0));
         players.add(2, new Player("Dealer", new ArrayList<Card>(), 0));
+
+        playerBtns = new ArrayList<>(Arrays.asList(btnStand1, btnStand2, btnHit1, btnHit2));
+        initWindow();
+        initEnable();
     }
 
+    /**
+     * Initialize labels which are being updated during the game
+     */
+    private void initWindow(){
+        labelSum1.setText("0");
+        labelSum2.setText("0");
+        labelSumDealer.setText("0");
+        labelDeck.setText(String.valueOf(Deck.getDeckOfCards().size()));
+    }
+
+    /**
+     * Set controllers as disable
+     */
+    private void initEnable(){
+        for(Button b: playerBtns){
+            b.setDisable(true);
+        }
+    }
 
     public void gameStart(ActionEvent actionEvent) {
         System.out.println("deckOfCards start with " + Deck.getDeckOfCards().size() + " !");
@@ -65,6 +85,7 @@ public class Controller implements Initializable {
         btnStart.setVisible(false);
         playerInt = 0;
         enableDisableButton(getTurn(playerInt));
+        initWindow();
     }
 
     public Player getTurn(int playerInt){
@@ -142,11 +163,11 @@ public class Controller implements Initializable {
     // display sum of Player1, 2 and dealer's card value
     public void displaySum(Player player, int sum){
         if(player.getName().equals("Player1")){
-            labelSum1.setText("Player1 sum:" + sum);
+            labelSum1.setText(String.valueOf(sum));
         }else if(player.getName().equals("Player2")){
-            labelSum2.setText("Player2 sum:" + sum);
+            labelSum2.setText(String.valueOf(sum));
         }else{
-            labelSumDealer.setText("Dealer sum:" + sum);
+            labelSumDealer.setText(String.valueOf(sum));
         }
     }
 

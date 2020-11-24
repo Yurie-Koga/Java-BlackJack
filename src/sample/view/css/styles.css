@@ -1,0 +1,109 @@
+* {
+    /*-fx-back-color: #288541;*/    /* main board */
+    -fx-basic-text-fill: #ffffff;
+    -fx-play-border-color: #d9e048;
+    -fx-gradi-end-color: #000000;
+    -fx-gradi-start-color: #008000;
+    -fx-basic-opacity-color: rgba(0, 0, 0, .3);
+}
+
+.root {
+    -fx-font-family: "Arial Black";
+}
+
+Button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #24b54b;
+    -fx-font-size: 20;
+}
+
+Button:hover {
+    -fx-text-fill: #00e300;
+    -fx-cursor: hand;
+}
+
+Label {
+    -fx-font-size: 36;
+    -fx-text-fill: #24b54b;
+}
+
+HBox {
+    -fx-spacing: 10px;
+}
+
+ImageView {
+    -fx-background-color: -fx-gradi-end-color;
+    -fx-effect: dropshadow(three-pass-box, black, 10, 0.3, 0, 0);
+}
+
+/* Main Window */
+.main-pane {
+    /*-fx-background-color: -fx-back-color;*/
+    /*-fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 20%, center 50% 50%, radius 50%, reflect, #008000, #000000 75%, #000000);*/
+
+    /*-fx-background-image: url('/sample/images/board.jpg');
+    -fx-background-size: 50% 50%;
+    -fx-background-color: radial-gradient(center 50% 50% , radius 70% , #008000, #000000);*/
+
+    /*-fx-background-image: url('/sample/images/board.jpg');
+    -fx-background-repeat: stretch;
+    -fx-background-size: 300 200;
+    -fx-background-position: center center;
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);*/
+
+    -fx-background-color: radial-gradient(center 50% 50% , radius 70% , #008000, #000000);
+}
+
+.label-title {
+    -fx-font-family: "Impact";
+    -fx-font-size: 100px;
+    -fx-alignment: center;
+    -fx-text-fill: -fx-basic-opacity-color;
+}
+
+.start-button {
+    -fx-background-color: #2fa5ad; /*25888f 30afb8*/
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-text-fill: -fx-basic-text-fill;
+    -fx-font-size: 40px;
+    -fx-alignment: center;
+}
+
+.start-button:hover {
+    -fx-background-color: #34c0c9; /* 30afb8 38d5e0*/
+}
+
+.deck-label {
+    -fx-text-fill: -fx-basic-text-fill;
+    -fx-font-size: 22;
+    -fx-alignment: center;
+}
+
+/* Buttons: Hit, Stand */
+.play-button {
+    -fx-background-color: -fx-gradi-start-color;
+    -fx-background-radius: 50;
+    -fx-border-color: -fx-play-border-color;
+    -fx-border-radius: 50;
+    -fx-text-fill: -fx-basic-text-fill;
+    -fx-font-size: 36;
+    -fx-pref-width: 188px;
+}
+
+/* Buttons: Hit, Stand */
+.play-button:hover {
+    -fx-background-color: #009e00;
+}
+
+/* Labels: Sum */
+.sum-label {
+    -fx-background-color: -fx-basic-opacity-color;
+    -fx-background-radius: 50%;
+    -fx-text-fill: -fx-basic-text-fill;
+    -fx-font-size: 38;
+    -fx-pref-width: 80;
+    -fx-pref-height: 80;
+    -fx-alignment: center;
+}
+

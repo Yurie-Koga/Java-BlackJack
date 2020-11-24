@@ -1,0 +1,37 @@
+* {
+    -fx-basic-text-fill: #ffffff;
+    -fx-play-border-color: #d9e048;
+    -fx-gradi-end-color: #000000;
+    -fx-gradi-start-color: #008000;
+    -fx-basic-opacity-color: rgba(0, 0, 0, .3);
+}
+
+.root {
+    -fx-font-family: "Arial Black";
+}
+
+Button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #24b54b;
+    -fx-font-size: 20;
+}
+
+Button:hover {
+    -fx-text-fill: #00e300;
+    -fx-cursor: hand;
+}
+
+Label {
+    -fx-font-size: 15;
+    -fx-text-fill: #cfcfcf;
+}
+
+/* Help Window */
+.main-pane {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 70% , #008000, #000000);
+}
+
+.menu-title-label {
+    -fx-font-size: 30;
+}
+

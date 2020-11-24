@@ -7,13 +7,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import sample.Main;
 
 public class HelpWindow {
     @FXML
     public Button btnReturn;
 
     /**
-     * Display a window of help.
+     * Display a help window
      *
      * @param actionEvent
      * @param classObj
@@ -22,19 +23,14 @@ public class HelpWindow {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(classObj.getResource("/sample/view/HelpWindow.fxml"));
-            /*
-             * if "fx:controller" is not set in fxml
-             * fxmlLoader.setController(NewWindowController);
-             */
-            Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-            // css is not working currently due to the intelliJ license
-//            scene.getStylesheets().add("sample/view/css/styles.css");
+            Scene scene = new Scene(fxmlLoader.load(), Main.APP_SCENE_WIDTH, Main.APP_SCENE_HEIGHT);
+            scene.getStylesheets().add("sample/view/css/menu.css");
             Stage stage = new Stage();
             stage.setTitle("Help");
             stage.setScene(scene);
             stage.show();
-            // Hide this current window (if this is what you want)
-//            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+            // can hide the the previous window
+            // ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
         }
