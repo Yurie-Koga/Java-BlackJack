@@ -76,7 +76,6 @@ public class Controller implements Initializable {
         }
     }
 
-    //------- Added-------//
     /**
      * Distribute 2 cards to players and a dealer hands
      * @param player
@@ -85,6 +84,7 @@ public class Controller implements Initializable {
     public ArrayList<Card> InitialHand(Player player){
         Card pickedCard1 = pickCard(player,deck);
         player.setHand(addToHand(player,pickedCard1));
+        player.setSum(totalSum(player));
         Card pickedCard2 = pickCard(player,deck);
         player.setHand(addToHand(player,pickedCard2));
         player.setSum(totalSum(player));
@@ -97,17 +97,13 @@ public class Controller implements Initializable {
      */
     public void gameStart(ActionEvent actionEvent) {
         System.out.println("deckOfCards start with " + Deck.getDeckOfCards().size() + " !");
-//        for (int i = 0; i < 3; i++){
-//            System.out.println(players.get(i));
-//        }
         System.out.println("Game Start!");
         // Hide Start Button after game starting
         btnStart.setVisible(false);
-
         for (int i = 0; i < 3 ; i++) {
             InitialHand(players.get(i));
         }
-//        playerInt = 0;
+
         /// Player1 & Player2 get Black Jack
         if(Judge.isBlackJack(players, "Player1") && Judge.isBlackJack(players, "Player2")){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -115,6 +111,16 @@ public class Controller implements Initializable {
             alert.setHeaderText("Player1 and Player2 BlackJack!\nClick 'Start' to play again. ");
             alert.showAndWait();
             btnStart.setVisible(true);
+            //--- Initialize ---s
+            Deck deck = new Deck();
+            players.add(new Player("Player1", new ArrayList<Card>(), 0));
+            players.add(new Player("Player2", new ArrayList<Card>(),0));
+            players.add(new Player("Dealer", new ArrayList<Card>(), 0));
+
+            playerBtns = new ArrayList<>(Arrays.asList(btnStand1, btnStand2, btnHit1, btnHit2));
+            initWindow();
+            initEnable();
+            //---------------
         }
         // Player1 BlackJack
         else  if (Judge.isBlackJack(players, "Player1")){
@@ -145,14 +151,21 @@ public class Controller implements Initializable {
             alert.setHeaderText("Dealer BlackJack!\nClick 'Start' to play again.");
             alert.showAndWait();
             btnStart.setVisible(true);
+            //--- Initialize ---s
+            Deck deck = new Deck();
+            players.add(new Player("Player1", new ArrayList<Card>(), 0));
+            players.add(new Player("Player2", new ArrayList<Card>(), 0));
+            players.add(new Player("Dealer", new ArrayList<Card>(), 0));
+
+            playerBtns = new ArrayList<>(Arrays.asList(btnStand1, btnStand2, btnHit1, btnHit2));
+            initWindow();
+            initEnable();
+            //---------------
         } else {
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
             System.out.println(players);
         }
-
-//        enableDisableButton(getTurn(playerInt));
-        initWindow();
     }
 
     public Player getTurn(int playerInt){
@@ -177,24 +190,15 @@ public class Controller implements Initializable {
             btnHit2.setDisable(true);
             btnStand2.setDisable(true);
 
-
-            //------------- Dealer method HERE----------------------
-
             if(totalSum(player) < 17) {
 
                 Card pickedCard = pickCard(player, deck);
                 player.setHand(addToHand(player, pickedCard));
                 player.setSum(totalSum(player));
-//                System.out.println(players.get(2));
                 playerInt = 0;
                 enableDisableButton(players.get(playerInt));
-//            }else if(totalSum(player) >= 22){
-//                System.out.println("Dealer bust");
-//            }else {
-//                System.out.println("Dealer standing");
             }
             Judge.gameResult(players);
-            //------------------------------------------------------
         }
     }
 
@@ -207,7 +211,6 @@ public class Controller implements Initializable {
     public Card pickCard(Player player, Deck deck){
         Random rand = new Random();
         int int_random = rand.nextInt(Deck.getDeckOfCards().size());
-//        System.out.println("Randomly chosen card for " + player.getName() + " is" + Deck.getDeckOfCards().get(int_random));
         Card pickedCard = Deck.getDeckOfCards().get(int_random);
         Deck.getDeckOfCards().remove(int_random);
         Deck.setDeckOfCards(Deck.getDeckOfCards());
@@ -268,14 +271,6 @@ public class Controller implements Initializable {
             players.remove(player);
             enableDisableButton(getTurn(playerInt));
         }
-//        Button hitClicked = (Button) actionEvent.getSource();
-//        String hitButtonId = hitClicked.getId();
-//        if (hitButtonId.equals("btnHit1")){
-//            playerInt++;
-//        } else if (hitButtonId.equals("btnHit2")){
-//            playerInt++;
-//        }
-//        enableDisableButton(getTurn(playerInt));
     }
 
     /**
@@ -289,7 +284,6 @@ public class Controller implements Initializable {
             playerInt++;
             System.out.println("btnStand1 clicked");
         } else if(hitButtonId.equals("btnStand2")){
-//            playerInt = 0;
             playerInt++;
             System.out.println("btnStand2 clicked");
         }
@@ -316,7 +310,4 @@ public class Controller implements Initializable {
         System.out.println("help clicked");
         HelpWindow.displayHelp(actionEvent, getClass());
     }
-
-    /// Display result (Judge -> use judge class to show the result (Win, bust, push)
-
 }
