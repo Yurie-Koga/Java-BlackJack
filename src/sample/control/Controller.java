@@ -82,13 +82,20 @@ public class Controller implements Initializable {
      * @return
      */
     public ArrayList<Card> InitialHand(Player player){
-        Card pickedCard1 = pickCard(player,deck);
-        player.setHand(addToHand(player,pickedCard1));
-        player.setSum(totalSum(player));
-        Card pickedCard2 = pickCard(player,deck);
-        player.setHand(addToHand(player,pickedCard2));
-        player.setSum(totalSum(player));
-        return player.getHand();
+        if(player.getName().equals("Player1") || player.getName().equals("Player2")){
+            Card pickedCard1 = pickCard(player,deck);
+            player.setHand(addToHand(player,pickedCard1));
+            player.setSum(totalSum(player));
+            Card pickedCard2 = pickCard(player,deck);
+            player.setHand(addToHand(player,pickedCard2));
+            player.setSum(totalSum(player));
+            return player.getHand();
+        }else{
+            Card pickedCard1 = pickCard(player,deck);
+            player.setHand(addToHand(player,pickedCard1));
+            player.setSum(totalSum(player));
+            return player.getHand();
+        }
     }
 
     /**
