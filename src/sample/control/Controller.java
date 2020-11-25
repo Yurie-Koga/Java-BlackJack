@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
@@ -19,7 +20,8 @@ import java.util.*;
 
 
 public class Controller implements Initializable {
-
+    @FXML
+    public AnchorPane anchorPaneMain;
     @FXML
     public Button btnStart;
     @FXML
@@ -347,7 +349,7 @@ public class Controller implements Initializable {
             alert.setHeaderText(player.getName() + " Busted!");
             alert.showAndWait();
             removePlayer(player);
-            // added-------
+
             if(players.size() == 1){
                 Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Players bust");
@@ -355,8 +357,8 @@ public class Controller implements Initializable {
                 alert.showAndWait();
                 restartGame();
             }
-            //-----------------------
-            enableDisableButton(getTurn(playerInt));
+            else
+                enableDisableButton(getTurn(playerInt));
         }
     }
 
@@ -410,8 +412,8 @@ public class Controller implements Initializable {
     private void updateHandDisplay(Player player, Card newCard) {
         int i = players.indexOf(player);
         HBox hand = playerHands.get(i);
+//        double[] position = {hand.getLayoutX(), hand.getLayoutY()};
         List<Node> cards = hand.getChildren();
-        System.out.println("player's index: " + i);
         if (cards.size() > 0) {
             // Multiple cards: update the current top card to move to under
             Pane lastCard = (Pane) cards.get(cards.size() - 1);
@@ -420,6 +422,7 @@ public class Controller implements Initializable {
         // add a new card to top
         Pane card = generateCard(newCard);
         hand.getChildren().add(card);
+
     }
     /**
      * Generate Pane of a new card
@@ -428,19 +431,22 @@ public class Controller implements Initializable {
      * @return
      */
     private Pane generateCard(Card newCard) {
-        Label txtSuit = new Label();
-        txtSuit.getStyleClass().add("hand-text-label");
-        txtSuit.setText(newCard.getSuit());
         Label txtValue = new Label();
         txtValue.getStyleClass().add("hand-text-label");
         txtValue.setText(newCard.getValue());
+
+        Label txtSuit = new Label();
+        txtSuit.getStyleClass().add("hand-text-label");
+        txtSuit.setText(newCard.getSuit());
+
         if (newCard.getSuit().equals(Deck.HEARTS) || newCard.getSuit().equals(Deck.DIAMONDS)) {
             txtValue.getStyleClass().add("red");
             txtSuit.getStyleClass().add("red");
         }
+
         TilePane card = new TilePane();
         card.getStyleClass().add("hand-tilepane");
-        card.getChildren().addAll(txtSuit, txtValue);
+        card.getChildren().addAll(txtValue, txtSuit);
         return card;
     }
 

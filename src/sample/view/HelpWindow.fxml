@@ -74,10 +74,10 @@
                     </rowConstraints>
                     <children>
                         <Label prefHeight="25.0" prefWidth="349.0" text="The detailed outcome of the hand follows:" GridPane.columnSpan="2" />
-                        <Label text="If the player exceeds a sum of 21 (&quot;busts&quot;), the player loses, even if the dealer also exceeds 21." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="If the player exceeds a sum of 21, it is &quot;busts&quot;, even if the dealer also exceeds 21." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="If the dealer exceeds 21 (&quot;busts&quot;) and the player does not, the player wins." GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="If the player attains a final sum higher than the dealer and does not bust, the player wins." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label text="If both dealer and player receive a blackjack or any other hands with the same sum called a &quot;push&quot;, no one wins." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="If any other hands with the same sum called a &quot;push&quot;, no one wins." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                     </children>
                 </GridPane>
             </children>

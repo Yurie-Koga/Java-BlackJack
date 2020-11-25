@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1018.0" styleClass="main-pane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.control.Controller">
+<AnchorPane fx:id="anchorPaneMain" prefHeight="720.0" prefWidth="1018.0" styleClass="main-pane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.control.Controller">
     <children>
         <HBox layoutX="46.0" layoutY="91.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
             <children>
@@ -86,7 +86,7 @@
         <Label fx:id="labelSumDealer" layoutX="291.0" layoutY="119.0" styleClass="sum-label" text="8" />
         <Label fx:id="labelSum2" layoutX="53.0" layoutY="585.0" styleClass="sum-label" text="19" AnchorPane.bottomAnchor="118.0" AnchorPane.leftAnchor="50.0" />
         <Label fx:id="labelSum1" layoutX="952.0" layoutY="586.0" styleClass="sum-label" text="26" AnchorPane.bottomAnchor="118.0" AnchorPane.rightAnchor="50.0" />
-        <HBox alignment="CENTER" layoutX="240.0" layoutY="215.0" prefHeight="165.0" prefWidth="539.0">
+        <HBox alignment="CENTER" layoutX="240.0" layoutY="235.0" prefHeight="165.0" prefWidth="539.0">
             <children>
                 <Label fx:id="labelTitle" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="label-title" text="Black Jack" />
             </children>

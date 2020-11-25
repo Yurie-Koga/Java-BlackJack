@@ -118,6 +118,10 @@ ImageView {
 .hand-tilepane {
     -fx-border-color: gray;
     -fx-background-color: white;
+    -fx-background-image: url('/sample/images/card.png');
+    -fx-background-size: 100% 50%;
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
     -fx-orientation: vertical;
     -fx-padding : 0 0 0 3;
     -fx-background-radius: 5;
@@ -126,12 +130,15 @@ ImageView {
     -fx-pref-width: 120;
     -fx-pref-height: 180;
 }
+
 /* Under card */
 .hand-tilepane.under {
+    -fx-background-image: null;
     -fx-border-radius: 5 0 0 5;
     -fx-background-radius: 5 0 0 5;
     -fx-pref-width: 30;
 }
+
 /* Container of Suit and Value labels */
 .hand-vbox {
     -fx-alignment: center;
