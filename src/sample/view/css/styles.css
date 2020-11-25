@@ -107,3 +107,40 @@ ImageView {
     -fx-alignment: center;
 }
 
+
+/* Hand display */
+/* Container of all cards */
+.hand-hbox {
+    -fx-spacing: 0px;
+    -fx-alignment: center;
+}
+/* Top card */
+.hand-tilepane {
+    -fx-border-color: gray;
+    -fx-background-color: white;
+    -fx-orientation: vertical;
+    -fx-padding : 0 0 0 3;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-alignment: top-left;
+    -fx-pref-width: 120;
+    -fx-pref-height: 180;
+}
+/* Under card */
+.hand-tilepane.under {
+    -fx-border-radius: 5 0 0 5;
+    -fx-background-radius: 5 0 0 5;
+    -fx-pref-width: 30;
+}
+/* Container of Suit and Value labels */
+.hand-vbox {
+    -fx-alignment: center;
+}
+.hand-text-label {
+    -fx-font-family: "Impact";
+    -fx-font-size: 20;
+    -fx-text-fill: black;
+}
+.hand-text-label.red {
+    -fx-text-fill: red;
+}

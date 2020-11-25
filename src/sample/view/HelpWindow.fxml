@@ -45,7 +45,7 @@
                         <Label text="The value of cards:" GridPane.columnSpan="2" />
                         <Label text="Ace" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="2 through 10" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text=": 1" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label text=": 11" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Label text=": their pip value" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <Label text="Jack, Queen, and King" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text=": 10" GridPane.columnIndex="2" GridPane.rowIndex="3" />
