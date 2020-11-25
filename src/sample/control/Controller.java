@@ -176,6 +176,24 @@ public class Controller implements Initializable {
             System.out.println(players);
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
+            ///-----added-----
+            if (Judge.isBusted(players.get(0))) {
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Player2 Busted");
+                alert.setHeaderText("Oh no! Player2 is Busted!");
+                alert.showAndWait();
+                removePlayer(players.get(0));
+
+                if (players.size() == 1) {
+                    Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Player1 Won");
+                    alert.setHeaderText("Player1 Won with BlackJack! Let's play again!");
+                    alert.showAndWait();
+                    restartGame();
+                }
+            }
+            //-----------------------
+
         }
         // Player2 BlackJack
         else if (Judge.isBlackJack(players, "Player2")){
@@ -187,6 +205,23 @@ public class Controller implements Initializable {
             System.out.println(players);
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
+
+            ////---- added-----
+            if (Judge.isBusted(players.get(0))) {
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Player1 Busted");
+                alert.setHeaderText("Oh no! Player1 is Busted!");
+                alert.showAndWait();
+                removePlayer(players.get(0));
+                if (players.size() == 1) {
+                    Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Player2 Won");
+                    alert.setHeaderText("Player2 Won with BlackJack! Let's play again!");
+                    alert.showAndWait();
+                    restartGame();
+                }
+            }
+            ///////
         }
         // Dealer BlackJack
         else if (Judge.isBlackJack(players, "Dealer")) {
@@ -232,8 +267,8 @@ public class Controller implements Initializable {
                 player.setHand(addToHand(player, pickedCard));
                 player.setSum(totalSum(player));
             }
-            playerInt = 0;
-            enableDisableButton(players.get(playerInt));
+//            playerInt = 0;
+//            enableDisableButton(players.get(playerInt));
 
             // check game result
             Judge.gameResult(players);
