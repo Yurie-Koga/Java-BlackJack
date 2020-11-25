@@ -227,14 +227,14 @@ public class Controller implements Initializable {
             btnHit2.setDisable(true);
             btnStand2.setDisable(true);
 
-            if(totalSum(player) < 17) {
-
+            while (totalSum(player) < 17) {
                 Card pickedCard = pickCard(player, deck);
                 player.setHand(addToHand(player, pickedCard));
                 player.setSum(totalSum(player));
-                playerInt = 0;
-                enableDisableButton(players.get(playerInt));
             }
+            playerInt = 0;
+            enableDisableButton(players.get(playerInt));
+
             // check game result
             Judge.gameResult(players);
             // restart
@@ -312,6 +312,15 @@ public class Controller implements Initializable {
             alert.setHeaderText(player.getName() + " Busted!");
             alert.showAndWait();
             removePlayer(player);
+            // added-------
+            if(players.size() == 1){
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Players bust");
+                alert.setHeaderText("Both players busted, Dealer wins!!");
+                alert.showAndWait();
+                restartGame();
+            }
+            //-----------------------
             enableDisableButton(getTurn(playerInt));
         }
     }
