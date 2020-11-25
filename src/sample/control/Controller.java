@@ -347,7 +347,7 @@ public class Controller implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText(null);
-        alert.setContentText("Do you quit this game?");
+        alert.setContentText("Do you want to quit this game?");
         ButtonType continueBtn = new ButtonType("Continue", ButtonBar.ButtonData.OK_DONE);
         ButtonType quitBtn = new ButtonType("Quit", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(continueBtn,quitBtn);
