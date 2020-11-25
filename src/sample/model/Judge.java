@@ -70,24 +70,30 @@ public class Judge extends Player {
             alert.setTitle("Dealer Bust");
             alert.setHeaderText("Dealer Busted! Player win!");
             alert.showAndWait();
-            System.exit(0);
+        } else if (dealerSum <= 21 && player1Sum <= 21 && player1Sum != 0 && player2Sum <= 21 && player2Sum != 0) {      ///added this else if
+            if (dealerSum - player1Sum == 0 && dealerSum - player2Sum == 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Dealer vs Player1 vs Player2: PUSH");
+                alert.setHeaderText("Dealer,Player1 and Player2 Push!");
+                alert.showAndWait();
+            }
         }
         if (dealerSum <= 21 && player1Sum <= 21 && player1Sum != 0) {
             int dealerDiff = 21 - dealerSum;
             int player1Diff = 21 - player1Sum;
             if (dealerDiff == player1Diff) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("PUSH");
+                alert.setTitle("Dealer vs Player1: PUSH");
                 alert.setHeaderText("Dealer and Player1 Push!");
                 alert.showAndWait();
             } else if (dealerDiff < player1Diff) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Dealer won");
+                alert.setTitle("Dealer vs Player1: Dealer won");
                 alert.setHeaderText("Dealer won!");
                 alert.showAndWait();
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Player1 won");
+                alert.setTitle("Dealer vs Player1: Player1 won");
                 alert.setHeaderText("Player1 won!");
                 alert.showAndWait();
             }
@@ -97,21 +103,20 @@ public class Judge extends Player {
             int player2Diff = 21 - player2Sum;
             if (dealerDiff == player2Diff) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("PUSH");
+                alert.setTitle("Dealer vs Player2: PUSH");
                 alert.setHeaderText("Dealer and Player2 Push!");
                 alert.showAndWait();
             } else if (dealerDiff < player2Diff) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Dealer won");
+                alert.setTitle("Dealer vs Player2: Dealer won");
                 alert.setHeaderText("Dealer won!");
                 alert.showAndWait();
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Player2 won");
+                alert.setTitle("Dealer vs Player2: Player2 won");
                 alert.setHeaderText("Player2 won!");
                 alert.showAndWait();
             }
         }
-//        System.exit(0);
     }
 }
