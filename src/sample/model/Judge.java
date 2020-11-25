@@ -112,6 +112,6 @@ public class Judge extends Player {
                 alert.showAndWait();
             }
         }
-        System.exit(0);
+//        System.exit(0);
     }
 }

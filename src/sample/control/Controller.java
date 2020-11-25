@@ -3,7 +3,12 @@ package sample.control;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import sample.model.Card;
 import sample.model.Deck;
 import sample.model.Judge;
@@ -37,43 +42,80 @@ public class Controller implements Initializable {
     public Label labelSumDealer;
     @FXML
     public Label labelDeck;
+    @FXML
+    public HBox hBoxHand1;
+    @FXML
+    public HBox hBoxHand2;
+    @FXML
+    public HBox hBoxHandDealer;
+    @FXML
+    public ImageView imgViewPlayer1;
+    @FXML
+    public ImageView imgViewPlayer2;
+    @FXML
+    public ImageView imgViewDealer;
 
     private Deck deck;
     private ArrayList<Player> players = new ArrayList<>();
     private int playerInt;
     private Player player;
     private ArrayList<Button> playerBtns = new ArrayList<>();
+    private ArrayList<HBox> playerHands = new ArrayList<>();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Deck deck = new Deck();
+        deck = new Deck();
         players.add(new Player("Player1", new ArrayList<Card>(), 0));
         players.add(new Player("Player2", new ArrayList<Card>(),0));
         players.add(new Player("Dealer", new ArrayList<Card>(), 0));
 
         playerBtns = new ArrayList<>(Arrays.asList(btnStand1, btnStand2, btnHit1, btnHit2));
-        initWindow();
-        initEnable();
+        playerHands = new ArrayList<>(Arrays.asList(hBoxHand1, hBoxHand2, hBoxHandDealer));
+        initializeDisplay();
     }
 
     /**
-     * Initialize labels which are being updated during the game
+     * Set controllers as initial display
      */
-    private void initWindow(){
+    private void initializeDisplay() {
+        for (Button b : playerBtns) {
+            b.setDisable(true);
+        }
+        imgViewPlayer1.setVisible(true);
+        imgViewPlayer2.setVisible(true);
+        imgViewDealer.setVisible(true);
+        labelDeck.setVisible(false);
+        labelSum1.setVisible(false);
+        labelSum2.setVisible(false);
+        labelSumDealer.setVisible(false);
+        hBoxHand1.setVisible(false);
+        hBoxHand2.setVisible(false);
+        hBoxHandDealer.setVisible(false);
+
+        labelDeck.setText(String.valueOf(Deck.getDeckOfCards().size()));
         labelSum1.setText("0");
         labelSum2.setText("0");
         labelSumDealer.setText("0");
-        labelDeck.setText(String.valueOf(Deck.getDeckOfCards().size()));
+        hBoxHand1.getChildren().clear();
+        hBoxHand2.getChildren().clear();
+        hBoxHandDealer.getChildren().clear();
     }
 
     /**
-     * Set controllers as disable
+     * Reset the display before staring game
      */
-    private void initEnable(){
-        for(Button b: playerBtns){
-            b.setDisable(true);
-        }
+    private void resetDisplay() {
+        imgViewPlayer1.setVisible(false);
+        imgViewPlayer2.setVisible(false);
+        imgViewDealer.setVisible(false);
+        labelDeck.setVisible(true);
+        labelSum1.setVisible(true);
+        labelSum2.setVisible(true);
+        labelSumDealer.setVisible(true);
+        hBoxHand1.setVisible(true);
+        hBoxHand2.setVisible(true);
+        hBoxHandDealer.setVisible(true);
     }
 
     /**
@@ -107,6 +149,8 @@ public class Controller implements Initializable {
         System.out.println("Game Start!");
         // Hide Start Button after game starting
         btnStart.setVisible(false);
+        resetDisplay();
+
         for (int i = 0; i < 3 ; i++) {
             InitialHand(players.get(i));
         }
@@ -118,16 +162,9 @@ public class Controller implements Initializable {
             alert.setHeaderText("Player1 and Player2 BlackJack!\nClick 'Start' to play again. ");
             alert.showAndWait();
             btnStart.setVisible(true);
-            //--- Initialize ---s
-            Deck deck = new Deck();
-            players.add(new Player("Player1", new ArrayList<Card>(), 0));
-            players.add(new Player("Player2", new ArrayList<Card>(),0));
-            players.add(new Player("Dealer", new ArrayList<Card>(), 0));
 
-            playerBtns = new ArrayList<>(Arrays.asList(btnStand1, btnStand2, btnHit1, btnHit2));
-            initWindow();
-            initEnable();
-            //---------------
+            // restart
+            restartGame();
         }
         // Player1 BlackJack
         else  if (Judge.isBlackJack(players, "Player1")){
@@ -135,7 +172,7 @@ public class Controller implements Initializable {
             alert.setTitle("Player1 BlackJack");
             alert.setHeaderText("Player1 BlackJack!\nNow it's Dealer v.s. Player2.");
             alert.showAndWait();
-            players.remove(0);
+            removePlayer(0);
             System.out.println(players);
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
@@ -146,7 +183,7 @@ public class Controller implements Initializable {
             alert.setTitle("Player2 BlackJack");
             alert.setHeaderText("Player2 BlackJack!\nNow it's Dealer v.s. Player1.");
             alert.showAndWait();
-            players.remove(1);
+            removePlayer(1);
             System.out.println(players);
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
@@ -158,16 +195,9 @@ public class Controller implements Initializable {
             alert.setHeaderText("Dealer BlackJack!\nClick 'Start' to play again.");
             alert.showAndWait();
             btnStart.setVisible(true);
-            //--- Initialize ---s
-            Deck deck = new Deck();
-            players.add(new Player("Player1", new ArrayList<Card>(), 0));
-            players.add(new Player("Player2", new ArrayList<Card>(), 0));
-            players.add(new Player("Dealer", new ArrayList<Card>(), 0));
 
-            playerBtns = new ArrayList<>(Arrays.asList(btnStand1, btnStand2, btnHit1, btnHit2));
-            initWindow();
-            initEnable();
-            //---------------
+            // restart
+            restartGame();
         } else {
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
@@ -205,7 +235,10 @@ public class Controller implements Initializable {
                 playerInt = 0;
                 enableDisableButton(players.get(playerInt));
             }
+            // check game result
             Judge.gameResult(players);
+            // restart
+            restartGame();
         }
     }
 
@@ -235,6 +268,9 @@ public class Controller implements Initializable {
     public ArrayList<Card> addToHand(Player player, Card card){
         ArrayList<Card> newHand = player.getHand();
         newHand.add(card);
+
+        // Display hand
+        updateHandDisplay(player, card);
         return newHand;
     }
 
@@ -275,7 +311,7 @@ public class Controller implements Initializable {
             alert.setTitle(player.getName() + " Bust");
             alert.setHeaderText(player.getName() + " Busted!");
             alert.showAndWait();
-            players.remove(player);
+            removePlayer(player);
             enableDisableButton(getTurn(playerInt));
         }
     }
@@ -313,8 +349,90 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Display help window
+     * @param actionEvent
+     */
     public void helpClicked(ActionEvent actionEvent) {
         System.out.println("help clicked");
         HelpWindow.displayHelp(actionEvent, getClass());
+    }
+
+    /**
+     * Update the display of hand
+     *
+     * @param newCard
+     */
+    private void updateHandDisplay(Player player, Card newCard) {
+        int i = players.indexOf(player);
+        HBox hand = playerHands.get(i);
+        List<Node> cards = hand.getChildren();
+        System.out.println("player's index: " + i);
+        if (cards.size() > 0) {
+            // Multiple cards: update the current top card to move to under
+            Pane lastCard = (Pane) cards.get(cards.size() - 1);
+            lastCard.getStyleClass().add("under");
+        }
+        // add a new card to top
+        Pane card = generateCard(newCard);
+        hand.getChildren().add(card);
+    }
+    /**
+     * Generate Pane of a new card
+     *
+     * @param newCard
+     * @return
+     */
+    private Pane generateCard(Card newCard) {
+        Label txtSuit = new Label();
+        txtSuit.getStyleClass().add("hand-text-label");
+        txtSuit.setText(newCard.getSuit());
+        Label txtValue = new Label();
+        txtValue.getStyleClass().add("hand-text-label");
+        txtValue.setText(newCard.getValue());
+        if (newCard.getSuit().equals(Deck.HEARTS) || newCard.getSuit().equals(Deck.DIAMONDS)) {
+            txtValue.getStyleClass().add("red");
+            txtSuit.getStyleClass().add("red");
+        }
+        TilePane card = new TilePane();
+        card.getStyleClass().add("hand-tilepane");
+        card.getChildren().addAll(txtSuit, txtValue);
+        return card;
+    }
+
+    /**
+     * Restart Game: show Start button
+     */
+    private void restartGame() {
+        deck = new Deck();
+        players = new ArrayList<>();
+        players.add(new Player("Player1", new ArrayList<Card>(), 0));
+        players.add(new Player("Player2", new ArrayList<Card>(), 0));
+        players.add(new Player("Dealer", new ArrayList<Card>(), 0));
+
+        playerBtns = new ArrayList<>(Arrays.asList(btnStand1, btnStand2, btnHit1, btnHit2));
+        playerHands = new ArrayList<>(Arrays.asList(hBoxHand1, hBoxHand2, hBoxHandDealer));
+
+        initializeDisplay();
+        btnStart.setVisible(true);
+    }
+
+    /**
+     * Remove player by player
+     * @param player
+     */
+    private void removePlayer(Player player) {
+        removePlayer(players.indexOf(player));
+    }
+
+    /**
+     * Remove player by index
+     * Remove Hand controller to keep the corresponding index with Players list
+     * @param index
+     */
+    private void removePlayer(int index) {
+        players.remove(index);
+//        playerBtns.remove(index); // should be removed as well but need to switch to 2D array instead of ArrayList
+        playerHands.remove(index);
     }
 }

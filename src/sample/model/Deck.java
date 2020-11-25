@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class Deck {
 
     // Suit Constants
-    private static final String HEARTS = "♥";
-    private static final String DIAMONDS = "♦";
-    private static final String SPADES = "♠";
-    private static final String CLOVERS = "♣";
+    public static final String HEARTS = "♥";
+    public static final String DIAMONDS = "♦";
+    public static final String SPADES = "♠";
+    public static final String CLOVERS = "♣";
 
     // Rank Constants
     private static final int ACE = 11;
@@ -25,6 +25,7 @@ public class Deck {
     private static final int QUEEN = 10;
     private static final int KING = 10;
 
+    private static final String[] values = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
     private static ArrayList<Card> deckOfCards;
 
     /**
@@ -48,7 +49,7 @@ public class Deck {
 
         for (int i = 0; i < 4; i++){
          for (int j = 0; j < 13; j++){
-            deckOfCards.add(new Card(suit[i], rank[j]));
+            deckOfCards.add(new Card(suit[i], rank[j], values[j]));
          }
         }
         Deck.deckOfCards = deckOfCards;
