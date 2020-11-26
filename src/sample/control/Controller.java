@@ -75,6 +75,7 @@ public class Controller implements Initializable {
         playerBtns = new ArrayList<>(Arrays.asList(btnStand1, btnStand2, btnHit1, btnHit2));
         playerHands = new ArrayList<>(Arrays.asList(hBoxHand1, hBoxHand2, hBoxHandDealer));
         initializeDisplay();
+
         playerInt = 0;
         blackJackCount = 0;
     }
@@ -175,6 +176,7 @@ public class Controller implements Initializable {
             removePlayer(0);
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
+
             if (Judge.isBusted(players.get(0))) {
                 Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Player2 Busted");
@@ -200,6 +202,7 @@ public class Controller implements Initializable {
             removePlayer(1);
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
+
             if (Judge.isBusted(players.get(0))) {
                 Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Player1 Busted");
@@ -318,30 +321,35 @@ public class Controller implements Initializable {
         player.setSum(totalSum(player));
 
 
-        if (Judge.isBusted(player)){
+        if (Judge.isBusted(player)) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(player.getName() + " Bust");
             alert.setHeaderText(player.getName() + " Busted!");
             alert.showAndWait();
             removePlayer(player);
 
-            if(players.size() == 1 && blackJackCount == 1){
+            if (players.size() == 1 && blackJackCount == 1) {
                 Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Dealer vs " + player.getName() + ": " +  player.getName() +  " bust");
+                alert.setTitle("Dealer vs " + player.getName() + ": " + player.getName() + " bust");
                 alert.setHeaderText(player.getName() + " busted, Dealer wins!!");
                 alert.showAndWait();
                 restartGame();
+
             }
-            if(players.size() == 1){
+            if (players.size() == 1) {
                 Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Players bust");
                 alert.setHeaderText("Both players busted, Dealer wins!!");
                 alert.showAndWait();
                 restartGame();
+
             }
-        } else {
+        else {
             enableDisableButton(getTurn(playerInt));
         }
+
+        }
+        else {enableDisableButton(getTurn(playerInt));}
     }
 
     /**
@@ -351,8 +359,16 @@ public class Controller implements Initializable {
     public void standClicked(ActionEvent actionEvent) {
         Button hitClicked = (Button) actionEvent.getSource();
         String hitButtonId = hitClicked.getId();
-        if(hitButtonId.equals("btnStand1") || hitButtonId.equals("btnStand2") ){
+//        if(hitButtonId.equals("btnStand1") || hitButtonId.equals("btnStand2") ){
+//            playerInt++;
+//        }
+
+        if(hitButtonId.equals("btnStand1")){
             playerInt++;
+
+        } else if(hitButtonId.equals("btnStand2")){
+            playerInt++;
+
         }
         enableDisableButton(getTurn(playerInt));
     }
