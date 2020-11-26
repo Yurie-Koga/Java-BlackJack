@@ -50,7 +50,7 @@ public class Judge extends Player {
      * @param players
      */
     public static void gameResult(ArrayList<Player> players) {
-        System.out.println("game Result method ");
+//        System.out.println("game Result method ");
         int player1Sum = 0;
         int player2Sum = 0;
         int dealerSum = 0;

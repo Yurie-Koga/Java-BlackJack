@@ -63,7 +63,7 @@ public class Controller implements Initializable {
     private Player player;
     private ArrayList<Button> playerBtns = new ArrayList<>();
     private ArrayList<HBox> playerHands = new ArrayList<>();
-
+    private int blackJackCount;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,6 +75,8 @@ public class Controller implements Initializable {
         playerBtns = new ArrayList<>(Arrays.asList(btnStand1, btnStand2, btnHit1, btnHit2));
         playerHands = new ArrayList<>(Arrays.asList(hBoxHand1, hBoxHand2, hBoxHandDealer));
         initializeDisplay();
+        playerInt = 0;
+        blackJackCount = 0;
     }
 
     /**
@@ -147,8 +149,8 @@ public class Controller implements Initializable {
      * @param actionEvent
      */
     public void gameStart(ActionEvent actionEvent) {
-        System.out.println("deckOfCards start with " + Deck.getDeckOfCards().size() + " !");
-        System.out.println("Game Start!");
+//        System.out.println("deckOfCards start with " + Deck.getDeckOfCards().size() + " !");
+//        System.out.println("Game Start!");
         // Hide Start Button after game starting
         btnStart.setVisible(false);
         resetDisplay();
@@ -170,12 +172,12 @@ public class Controller implements Initializable {
         }
         // Player1 BlackJack
         else  if (Judge.isBlackJack(players, "Player1")){
+            blackJackCount++;
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Player1 BlackJack");
             alert.setHeaderText("Player1 BlackJack!\nNow it's Dealer v.s. Player2.");
             alert.showAndWait();
             removePlayer(0);
-            System.out.println(players);
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
             ///-----added-----
@@ -199,12 +201,12 @@ public class Controller implements Initializable {
         }
         // Player2 BlackJack
         else if (Judge.isBlackJack(players, "Player2")){
+            blackJackCount++;
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Player2 BlackJack");
             alert.setHeaderText("Player2 BlackJack!\nNow it's Dealer v.s. Player1.");
             alert.showAndWait();
             removePlayer(1);
-            System.out.println(players);
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
 
@@ -226,19 +228,19 @@ public class Controller implements Initializable {
             ///////
         }
         // Dealer BlackJack
-        else if (Judge.isBlackJack(players, "Dealer")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Dealer BlackJack");
-            alert.setHeaderText("Dealer BlackJack!\nClick 'Start' to play again.");
-            alert.showAndWait();
-            btnStart.setVisible(true);
-
-            // restart
-            restartGame();
-        } else {
+//        else if (Judge.isBlackJack(players, "Dealer")) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Dealer BlackJack");
+//            alert.setHeaderText("Dealer BlackJack!\nClick 'Start' to play again.");
+//            alert.showAndWait();
+//            btnStart.setVisible(true);
+//
+//            // restart
+//            restartGame();
+//        }
+        else {
             playerInt = 0;
             enableDisableButton(getTurn(playerInt));
-            System.out.println(players);
         }
     }
 
@@ -341,7 +343,7 @@ public class Controller implements Initializable {
         player = getTurn(playerInt);
         player.setHand(addToHand(player, pickCard(player, deck)));
         player.setSum(totalSum(player));
-        System.out.println(player);
+
 
         if (Judge.isBusted(player)){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -349,6 +351,15 @@ public class Controller implements Initializable {
             alert.setHeaderText(player.getName() + " Busted!");
             alert.showAndWait();
             removePlayer(player);
+
+            // added-------
+            if(players.size() == 1 && blackJackCount == 1){
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Dealer vs " + player.getName() + ": " +  player.getName() +  " bust");
+                alert.setHeaderText(player.getName() + " busted, Dealer wins!!");
+                alert.showAndWait();
+                restartGame();
+            }
 
             if(players.size() == 1){
                 Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
@@ -369,13 +380,12 @@ public class Controller implements Initializable {
     public void standClicked(ActionEvent actionEvent) {
         Button hitClicked = (Button) actionEvent.getSource();
         String hitButtonId = hitClicked.getId();
-        if(hitButtonId.equals("btnStand1")){
+        if(hitButtonId.equals("btnStand1") || hitButtonId.equals("btnStand2") ){
             playerInt++;
-            System.out.println("btnStand1 clicked");
-        } else if(hitButtonId.equals("btnStand2")){
-            playerInt++;
-            System.out.println("btnStand2 clicked");
         }
+//        else if(hitButtonId.equals("btnStand2")){
+//            playerInt++;
+//        }
         enableDisableButton(getTurn(playerInt));
     }
 
@@ -400,7 +410,6 @@ public class Controller implements Initializable {
      * @param actionEvent
      */
     public void helpClicked(ActionEvent actionEvent) {
-        System.out.println("help clicked");
         HelpWindow.displayHelp(actionEvent, getClass());
     }
 
@@ -465,6 +474,8 @@ public class Controller implements Initializable {
 
         initializeDisplay();
         btnStart.setVisible(true);
+        playerInt = 0;
+        blackJackCount = 0;
     }
 
     /**
